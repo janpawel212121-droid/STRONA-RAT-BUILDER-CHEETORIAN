@@ -1,3 +1,7 @@
+const SUPABASE_URL = 'https://sfzerzriyihjzwzmmypl.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmemVyenJpeWloanp3em1teXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NzcwNjcsImV4cCI6MjA5MTI1MzA2N30.-djIOGgeHdva9JNOIQuXsIoKUH_o-8gj6kZxu1AGBf0';
+const apiClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 const SVG_ICONS = {
     'hammer': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
     'crosshairs': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>',
@@ -147,22 +151,23 @@ function initApp() {
     tryExecute(() => renderAdminUsers());
     
     // Auto-login z Supabase
-    if(typeof supabase !== 'undefined') {
-        supabase.auth.getSession().then(({ data: { session } }) => {
+    if(apiClient) {
+        apiClient.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 loadUserData(session.user.email);
                 document.getElementById('auth-view').classList.remove('active');
                 document.getElementById('dashboard-view').classList.add('active');
                 safeDrawIcons();
             }
-        });
+        }).catch(e => console.error("Session fetch err:", e));
         
-        supabase.auth.onAuthStateChange((_event, session) => {
+        apiClient.auth.onAuthStateChange((_event, session) => {
             if (session) {
                 loadUserData(session.user.email);
             }
         });
     }
+
 }
 
 if (document.readyState === 'loading') {
@@ -192,17 +197,13 @@ function setTheme(primary, secondary, glow) {
     tryExecute(() => initParticles('circle', 3));
 }
 
-const SUPABASE_URL = 'https://sfzerzriyihjzwzmmypl.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmemVyenJpeWloanp3em1teXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NzcwNjcsImV4cCI6MjA5MTI1MzA2N30.-djIOGgeHdva9JNOIQuXsIoKUH_o-8gj6kZxu1AGBf0';
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
 async function handleLogin() {
     const email = document.getElementById('log-user').value;
     const pass = document.getElementById('log-pass').value;
     if(!email || !pass) return;
     
     showToast("Nawiązywanie połączenia (Supabase)...");
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await apiClient.auth.signInWithPassword({
         email: email,
         password: pass,
     });
@@ -231,7 +232,7 @@ async function handleRegister() {
     }
     
     showToast("Weryfikacja w chmurze Supabase...");
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await apiClient.auth.signUp({
         email: email,
         password: pass,
         options: {
@@ -289,8 +290,8 @@ function login() {
 }
 
 async function logout() {
-    if(typeof supabase !== 'undefined') {
-        await supabase.auth.signOut();
+    if(typeof apiClient !== 'undefined' && apiClient) {
+        await apiClient.auth.signOut();
     }
     localStorage.removeItem('currentUser');
     document.getElementById('dashboard-view').classList.remove('active');
@@ -329,7 +330,7 @@ async function saveProfileChanges() {
     
     // Zmiana hasła poprzez API bazy
     if(currentPass !== '' && newPass.trim() !== '') {
-        const { error } = await supabase.auth.updateUser({ password: newPass });
+        const { error } = await apiClient.auth.updateUser({ password: newPass });
         if(error) {
             showToast("Błąd autoryzyacji zmiany: " + error.message);
             return;
