@@ -198,7 +198,7 @@ function setTheme(primary, secondary, glow) {
 }
 
 async function handleLogin() {
-    const email = document.getElementById('log-user').value;
+    const email = document.getElementById('log-user').value.trim();
     const pass = document.getElementById('log-pass').value;
     if(!email || !pass) return;
     
@@ -222,7 +222,7 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-    const email = document.getElementById('reg-mail').value;
+    const email = document.getElementById('reg-mail').value.trim();
     const pass = document.getElementById('reg-pass').value;
     const uName = document.getElementById('reg-user').value;
 
