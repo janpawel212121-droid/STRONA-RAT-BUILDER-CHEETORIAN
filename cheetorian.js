@@ -778,57 +778,85 @@ function closeModal() {
 /* ================================
    REPORTS LOGIC
 ==================================*/
-function submitReport() {
+async function submitReport() {
     const text = document.getElementById('report-message').value.trim();
     if(text === '') {
         showToast("Nie możesz wysłać pustego zgłoszenia!");
         return;
     }
     
-    const currentUser = localStorage.getItem('currentUser') || 'Anonymous';
-    let reports = JSON.parse(localStorage.getItem('cheet_reports') || '[]');
-    reports.unshift({
-        user: currentUser,
-        text: text,
-        date: new Date().toLocaleString()
-    });
-    localStorage.setItem('cheet_reports', JSON.stringify(reports));
-    
-    showToast("Zgłoszenie wysłane pomyślnie! Administracja się nim zajmie.");
-    document.getElementById('report-message').value = '';
-    
-    if(currentUser.toLowerCase() === OWNER_EMAIL) {
-        renderAdminReports();
+    if(!apiClient) {
+        showToast("Błąd: brak połączenia z bazą danych.");
+        return;
     }
+
+    const currentUser = localStorage.getItem('currentUser') || 'Anonymous';
+    const dispName = currentUser.split('@')[0];
+
+    showToast("Wysyłanie zgłoszenia...");
+
+    const { error } = await apiClient.from('reports').insert({
+        user_email: currentUser,
+        display_name: dispName,
+        message: text
+    });
+    
+    if(error) {
+        showToast("Błąd wysyłania: " + error.message);
+        return;
+    }
+
+    showToast("Zgłoszenie wysłane! Administracja się nim zajmie.");
+    document.getElementById('report-message').value = '';
 }
 
-function renderAdminReports() {
+async function renderAdminReports() {
     const list = document.getElementById('admin-reports-list');
     if(!list) return;
-    
-    let reports = JSON.parse(localStorage.getItem('cheet_reports') || '[]');
-    if(reports.length === 0) {
-        list.innerHTML = `<div style="text-align:center; padding: 30px; color:var(--text-muted);">Brak nowych zgłoszeń.</div>`;
+
+    if(!apiClient) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">Brak połączenia z bazą.</div>`;
+        return;
+    }
+
+    list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">Wczytuję zgłoszenia...</div>`;
+
+    const { data, error } = await apiClient
+        .from('reports')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if(error) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--danger);">Błąd wczytywania: ${error.message}</div>`;
+        return;
+    }
+
+    if(!data || data.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">Brak nowych zgłoszeń.</div>`;
         return;
     }
     
-    list.innerHTML = reports.map((r, i) => `
-        <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid #272732; position:relative; margin-bottom: 10px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <span style="font-weight:bold; color:var(--primary); font-size:0.95rem;">${r.user}</span>
-                <span style="font-size:0.8rem; color:var(--text-muted);">${r.date}</span>
-                <button onclick="deleteReport(${i})" style="position:absolute; top:10px; right:10px; background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="x" style="width:16px;"></i></button>
+    list.innerHTML = data.map(r => `
+        <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid #272732; position:relative; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-weight:bold; color:var(--primary); font-size:0.95rem;">${r.display_name || r.user_email}</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">${new Date(r.created_at).toLocaleString()}</span>
+                <button onclick="deleteReport('${r.id}')" style="position:absolute; top:10px; right:10px; background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="x" style="width:16px;"></i></button>
             </div>
-            <p style="font-size:0.9rem; margin:0; line-height:1.4; color: #d4d4d8;">${r.text}</p>
+            <p style="font-size:0.9rem; margin:0; line-height:1.4; color:#d4d4d8;">${r.message}</p>
+            <p style="font-size:0.75rem; margin-top:6px; color:var(--text-muted);">${r.user_email}</p>
         </div>
     `).join('');
     safeDrawIcons();
 }
 
-function deleteReport(index) {
-    let reports = JSON.parse(localStorage.getItem('cheet_reports') || '[]');
-    reports.splice(index, 1);
-    localStorage.setItem('cheet_reports', JSON.stringify(reports));
+async function deleteReport(id) {
+    if(!apiClient) return;
+    const { error } = await apiClient.from('reports').delete().eq('id', id);
+    if(error) {
+        showToast("Błąd usuwania: " + error.message);
+        return;
+    }
+    showToast("Zgłoszenie usunięte.");
     renderAdminReports();
-    showToast("Zgłoszenie pomyślnie wyrzucone.");
 }
