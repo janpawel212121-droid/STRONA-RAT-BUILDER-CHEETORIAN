@@ -84,7 +84,7 @@
             
             <div class="nav-section-title" data-i18n="n-plat">Zarządzanie Platformą</div>
             <ul class="nav-links">
-                <li data-page="users-admin"><i data-lucide="users"></i><span data-i18n="n-spy">Nadzór Szpiegowski</span></li>
+                <li data-page="users-admin" id="nav-item-admin"><i data-lucide="users"></i><span data-i18n="n-spy">Nadzór Szpiegowski</span></li>
                 <li data-page="account"><i data-lucide="user"></i><span data-i18n="n-acc">Mój Profil (Konto)</span></li>
                 <li data-page="settings"><i data-lucide="settings"></i><span data-i18n="n-thm">Personalizacja</span></li>
             </ul>
@@ -99,7 +99,7 @@
                 <div class="avatar theme-bg" id="sidebar-avatar"><i data-lucide="user-check" style="color:#fff;"></i></div>
                 <div class="info">
                     <span class="username" id="sidebar-username">Admin</span>
-                    <span class="role theme-text" data-i18n="n-role">Właściciel Sieci</span>
+                    <span class="role theme-text" id="role-display" style="font-weight:700;" data-i18n="n-role">Właściciel Sieci</span>
                 </div>
                 <button class="logout-btn" onclick="logout()" title="Wyloguj"><i data-lucide="power"></i></button>
             </div>
@@ -353,6 +353,7 @@
     <a id="download-anchor" style="display:none;"></a>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cheetorian.js?v=800"></script>
 </body>
 </html>

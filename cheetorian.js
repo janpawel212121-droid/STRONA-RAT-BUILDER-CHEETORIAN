@@ -146,9 +146,22 @@ function initApp() {
     });
     tryExecute(() => renderAdminUsers());
     
-    // Auto-login check
-    if(localStorage.getItem('currentUser')) {
-        loadUserData(localStorage.getItem('currentUser'));
+    // Auto-login z Supabase
+    if(typeof supabase !== 'undefined') {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                loadUserData(session.user.email);
+                document.getElementById('auth-view').classList.remove('active');
+                document.getElementById('dashboard-view').classList.add('active');
+                safeDrawIcons();
+            }
+        });
+        
+        supabase.auth.onAuthStateChange((_event, session) => {
+            if (session) {
+                loadUserData(session.user.email);
+            }
+        });
     }
 }
 
@@ -179,88 +192,109 @@ function setTheme(primary, secondary, glow) {
     tryExecute(() => initParticles('circle', 3));
 }
 
-function getDB() {
-    let db = localStorage.getItem('cheet_db');
-    if(!db) {
-        db = { users: {} };
-        localStorage.setItem('cheet_db', JSON.stringify(db));
-    } else {
-        db = JSON.parse(db);
-    }
-    return db;
-}
-function saveDB(db) {
-    localStorage.setItem('cheet_db', JSON.stringify(db));
-}
+const SUPABASE_URL = 'https://sfzerzriyihjzwzmmypl.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmemVyenJpeWloanp3em1teXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NzcwNjcsImV4cCI6MjA5MTI1MzA2N30.-djIOGgeHdva9JNOIQuXsIoKUH_o-8gj6kZxu1AGBf0';
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-function handleLogin() {
-    const user = document.getElementById('log-user').value;
+async function handleLogin() {
+    const email = document.getElementById('log-user').value;
     const pass = document.getElementById('log-pass').value;
+    if(!email || !pass) return;
     
-    if(!user || !pass) return;
-    
-    const db = getDB();
-    if(db.users[user] && db.users[user].password === pass) {
-        localStorage.setItem('currentUser', user);
-        loadUserData(user);
+    showToast("Nawiązywanie połączenia (Supabase)...");
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: pass,
+    });
+
+    if (error) {
+        showToast("Błąd logowania: " + error.message);
+    } else {
+        localStorage.setItem('currentUser', email);
         document.getElementById('auth-view').classList.remove('active');
         setTimeout(() => {
             document.getElementById('dashboard-view').classList.add('active');
             safeDrawIcons();
         }, 250);
-    } else {
-        showToast(DICT[currentLang]['toast-err']);
+        showToast("Pomyślnie zautoryzowano!");
     }
 }
 
-function handleRegister() {
-    const user = document.getElementById('reg-user').value;
-    const mail = document.getElementById('reg-mail').value;
+async function handleRegister() {
+    const email = document.getElementById('reg-mail').value;
     const pass = document.getElementById('reg-pass').value;
+    const uName = document.getElementById('reg-user').value;
 
-    if(!user || !pass || !mail) return;
-
-    const db = getDB();
-    if(db.users[user]) {
-        showToast("Konto o tym loginie już istnieje!");
+    if(!email || !pass) {
+        showToast("E-mail i hasło są wymagane do rejestracji bazy danych.");
         return;
     }
+    
+    showToast("Weryfikacja w chmurze Supabase...");
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: pass,
+        options: {
+            data: { display_name: uName }
+        }
+    });
 
-    db.users[user] = { email: mail, password: pass, avatar: '', hits: 0 };
-    saveDB(db);
-    showToast("Utworzono konto! Zaloguj się.");
-    document.querySelector('[data-target="login"]').click();
+    if (error) {
+        showToast("Błąd rejestracji: " + error.message);
+    } else {
+        showToast("Konto utworzone w bazie roboczej! Zaloguj się.");
+        document.querySelector('[data-target="login"]').click();
+        document.getElementById('log-user').value = email;
+    }
 }
 
-function loadUserData(username) {
-    const db = getDB();
-    const u = db.users[username];
-    if(u) {
-        document.getElementById('sidebar-username').innerText = username;
-        document.getElementById('profile-username').innerText = username;
+const OWNER_EMAIL = 'admin@cheetorian.com';
+
+function loadUserData(email) {
+    let dispName = email.split('@')[0];
+    document.getElementById('sidebar-username').innerText = dispName;
+    document.getElementById('profile-username').innerText = dispName;
+    
+    // System Ról i Dostępu
+    const isAdmin = (email.toLowerCase() === OWNER_EMAIL);
+    const roleDisplay = document.getElementById('role-display');
+    const navAdmin = document.getElementById('nav-item-admin');
+    
+    if (isAdmin) {
+        roleDisplay.innerText = 'OWNER';
+        roleDisplay.style.color = 'var(--primary)';
+        if (navAdmin) navAdmin.style.display = 'flex';
+    } else {
+        roleDisplay.innerText = 'FREE';
+        roleDisplay.style.color = 'var(--text-muted)';
+        if (navAdmin) navAdmin.style.display = 'none';
         
-        if(u.avatar) {
-             document.getElementById('profile-avatar-display').innerHTML = `<img src="${u.avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:30px;">`;
-             document.getElementById('sidebar-avatar').innerHTML = `<img src="${u.avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:14px;">`;
+        // Zabezpieczenie przed przebywaniem na zablokowanej zakładce
+        const adminPage = document.getElementById('page-users-admin');
+        if (adminPage && adminPage.classList.contains('active')) {
+            document.querySelector('[data-page="build"]').click();
         }
+    }
+    
+    const db = JSON.parse(localStorage.getItem('cheet_db') || '{"users":{}}');
+    if(db.users[email] && db.users[email].avatar) {
+         document.getElementById('profile-avatar-display').innerHTML = `<img src="${db.users[email].avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:30px;">`;
+         document.getElementById('sidebar-avatar').innerHTML = `<img src="${db.users[email].avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:14px;">`;
     }
 }
 
 function login() {
-    // Fallback if needed, normally handled via handleLogin
     document.getElementById('auth-view').classList.remove('active');
-    setTimeout(() => {
-        document.getElementById('dashboard-view').classList.add('active');
-        safeDrawIcons();
-    }, 250);
+    setTimeout(() => { document.getElementById('dashboard-view').classList.add('active'); safeDrawIcons(); }, 250);
 }
 
-function logout() {
+async function logout() {
+    if(typeof supabase !== 'undefined') {
+        await supabase.auth.signOut();
+    }
     localStorage.removeItem('currentUser');
     document.getElementById('dashboard-view').classList.remove('active');
-    setTimeout(() => {
-        document.getElementById('auth-view').classList.add('active');
-    }, 250);
+    setTimeout(() => { document.getElementById('auth-view').classList.add('active'); }, 250);
 }
 
 /* ================================
@@ -277,11 +311,10 @@ function handleAvatarUpload(event) {
             
             const currentUser = localStorage.getItem('currentUser');
             if(currentUser) {
-                const db = getDB();
-                if(db.users[currentUser]) {
-                    db.users[currentUser].avatar = avatarUrl;
-                    saveDB(db);
-                }
+                const db = JSON.parse(localStorage.getItem('cheet_db') || '{"users":{}}');
+                if(!db.users[currentUser]) db.users[currentUser] = {};
+                db.users[currentUser].avatar = avatarUrl;
+                localStorage.setItem('cheet_db', JSON.stringify(db));
             }
             showToast(DICT[currentLang]['toast-prof']);
         };
@@ -289,39 +322,31 @@ function handleAvatarUpload(event) {
     }
 }
 
-function saveProfileChanges() {
+async function saveProfileChanges() {
     const nick = document.getElementById('profile-nick-input').value.trim();
     const currentPass = document.getElementById('profile-old-pass').value;
     const newPass = document.getElementById('profile-new-pass').value;
     
-    const currentUser = localStorage.getItem('currentUser');
-    if(!currentUser) return;
-    
-    const db = getDB();
-    let u = db.users[currentUser];
-
-    // Password Check First
-    if(currentPass !== '') {
-        if(u.password !== currentPass) {
-            showToast(DICT[currentLang]['toast-err']);
+    // Zmiana hasła poprzez API bazy
+    if(currentPass !== '' && newPass.trim() !== '') {
+        const { error } = await supabase.auth.updateUser({ password: newPass });
+        if(error) {
+            showToast("Błąd autoryzyacji zmiany: " + error.message);
+            return;
+        } else {
+            showToast("Hasło nadpisane na serwerze! Zaloguj się ponownie.");
+            await logout();
             return;
         }
-        if(newPass.trim() !== '') {
-            u.password = newPass.trim();
-        }
     }
 
-    // Changing Nickname (Key Migration)
-    if(nick !== '' && nick !== currentUser) {
-        db.users[nick] = u;
-        delete db.users[currentUser];
-        localStorage.setItem('currentUser', nick);
+    // Aktualizacja widocznego UI
+    if(nick !== '') {
         document.getElementById('profile-username').innerText = nick;
         document.getElementById('sidebar-username').innerText = nick;
+        showToast(DICT[currentLang]['toast-prof']);
     }
 
-    saveDB(db);
-    showToast(DICT[currentLang]['toast-prof']);
     document.getElementById('profile-nick-input').value = '';
     document.getElementById('profile-old-pass').value = '';
     document.getElementById('profile-new-pass').value = '';
